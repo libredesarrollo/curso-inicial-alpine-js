@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Primeros pasos Alpine.js</title>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <style>
+        .hidden {
+            display: none;
+        }
+
+        .border {
+            border: 1px solid black
+        }
+
+        .bg {
+            background: blue;
+        }
+
+        .box {
+            width: 20px;
+            height: 20px
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <h4>Click y show</h4>
+
+    <div x-data="{ open:false }">
+        <button x-on:click="open=!open">Dame un click</button>
+        <div x-show="open">
+            Oculto por defecto
+        </div>
+    </div>
+
+    <h4>Model y text</h4>
+
+    <div x-data="{ text:'' }">
+        <input type="text" x-model="text" />
+        <p x-text="text"></p>
+    </div>
+
+    <h4>Atributos</h4>
+
+    <h5>Atributos simples</h5>
+    <div x-data="{ mujer:true }">
+        <button x-bind:disabled="mujer==false" x-on:click="mujer=false">Hombre</button>
+        <button :disabled="mujer==true" @click="mujer=true">Mujer</button>
+    </div>
+
+    <h5>Atributos: clases (complejos)</h5>
+    <div x-data="{ mujer:true }">
+        <button x-bind:class="{ 'hidden': !mujer }" x-on:click="mujer=false">Hombre</button>
+        <button :class="{ 'hidden': mujer }" @click="mujer=true">Mujer</button>
+        <p x-text="mujer"></p>
+    </div>
+
+    <h5>Clases múltiples</h5>
+
+    <div x-data="{ border:true, bg:false }">
+        <button @click="border=!border">Border</button>
+        <button @click="bg=!bg">Fondo</button>
+        <div class="box" :class="{ 'border': border == true , 'bg' : bg }"></div>
+        <div class="box" :class="{ border, bg  }"></div>
+    </div>
+
+    <h5>Estilo</h5>
+
+    <div x-data="{ border:'1px solid black', bg:'red' }">
+
+        <button @click="border='1px solid black'">Border 1</button>
+        <button @click="border='2px solid red'">Border 2</button>
+
+        <p x-text="border"></p>
+
+        <button @click="bg='red'">bg 1</button>
+        <button @click="bg='blue'">bg 2</button>
+
+        <p x-text="bg"></p>
+
+        <div class="box" :style=" 'border: '+border+'; background:'+bg " +></div>
+        <div class="box" :style=" `border: ${border}; background:${bg} ` " +></div>
+    </div>
+
+    <h4>Ciclos y condicionales</h4>
+
+    <div x-data="{todos:[ 'Sacar la basura', 'programar un rato', 'durar en el trabajo']}">
+        <template x-for="t in todos">
+            <p x-text="t"></p>
+        </template>
+    </div>
+
+    <h5>Objetos</h5>
+
+    <div
+        x-data="{todos:[ {completed:true, task:'Sacar la basura'}, {completed:false, task:'programar un rato'}, {completed:false, task:'durar en el trabajo'}]}">
+        <template x-for="t in todos">
+            <p>
+                <template x-if="t.completed">
+                    <span>Completado</span>
+                </template>
+                <template x-if="!t.completed">
+                    <span>No Completado</span>
+                </template>
+                <span x-text="t.task"></span>
+            </p>
+        </template>
+    </div>
+
+    <hr>
+
+    <h4>Script aparte</h4>
+
+    <div
+        x-data="data()">
+
+        <p>Total tareas <span x-text="totalTareas"></span></p>
+
+        <template x-for="t in todos">
+            <p>
+                <template x-if="completed(t)">
+                    <span>Completado</span>
+                </template>
+                <template x-if="!t.completed">
+                    <span>No Completado</span>
+                </template>
+                <span x-text="t.task"></span>
+            </p>
+        </template>
+    </div>
+
+    <script>
+        function data(){
+            return {
+                todos:[ {completed:true, task:'Sacar la basura'}, {completed:false, task:'programar un rato'}, {completed:false, task:'durar en el trabajo'}],
+                completed(todo){
+                    return todo.completed
+                },
+                incompleted(todo){
+                    return !todo.completed
+                },
+                totalTareas(){
+                    return this.todos.length
+                }
+            }
+        }
+    </script>
+
+</body>
+
+</html>
