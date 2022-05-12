@@ -116,6 +116,24 @@
 
     <hr>
 
+    <h5>X-Ref</h5>
+
+    <div x-data="{text:'Hola Mundo'}">
+        <input type="text" x-model="text">
+        <p x-text="text"></p>
+        <span class="claseEjemplo" x-ref="textRef">Texto de ejemplo</span>
+        <button @click="$refs.textRef.innerText = text">Dame un click</button>
+    </div>
+
+
+
+
+
+
+
+
+
+
     <h4>Script aparte</h4>
 
     <div
