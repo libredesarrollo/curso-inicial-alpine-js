@@ -127,17 +127,122 @@
 
 
 
+    <h5>x-ignore</h5>
+
+    <div x-data="{ label:'Hola Mundo' }">
+        <span x-text="label" x-ignore>
+            Texto por defecto
+        </span>
+        <span x-text="label"> Texto por defecto</span>
+    </div>
 
 
+    <h5>x-teleport</h5>
+
+    <div x-data="{data:'valor a teletransportar' }">
+
+        <template x-teleport="body">
+            <span @click="data=Date()" x-text="data"></span>
+        </template>
+
+        <div id="idTeleport"></div>
+    </div>
+
+    <h5>x-effect</h5>
+
+    <div x-data="{date:'Hola Mundo', label:'texto ejemplo'}" x-effect="console.log(date); console.log(label)">
+        <button @click="date=Date()" x-text="date"></button>
+        <button @click="label+=label" x-text="date"></button>
+    </div>
+
+    <h5>watch</h5>
+
+    <div x-data="{ foo: { bar:'Hola mundo' } }" x-init="$watch('foo.bar', value => console.log(value))">
+        <button @click="foo.bar=Date()" x-text="foo.bar"></button>
+    </div>
+
+    <h5>x-HTML</h5>
+
+    <div x-data="{ html:'<h1>Hola Mundo</h1>' }">
+        <div x-html="html"></div>
+    </div>
 
 
+    <h5>$id</h5>
 
+    <div x-data>
+        <label :id="$id('ids-input')"></label>
+        <input :id="$id('ids-input')" />
+
+        <div x-id="['text-input']">
+            <label :for="$id('text-input')">Usuario</label>
+            <input :id="$id('text-input')" />
+        </div>
+    </div>
+
+    <div x-data="{ key:$id('identification') }">
+        <label :for="key">NID</label>
+        <input :id="key" />
+
+        <div x-id="['identification']">
+            <label :for="$id('identification')">Usuario</label>
+            <input :id="$id('identification')" />
+        </div>
+
+    </div>
+
+
+    <h5>$el</h5>
+
+    <div x-data>
+        <button @click="console.log($el); $el.innerText = 'Cambie el label del boton'">Mètodo màgico $el</button>
+    </div>
+
+
+    <h5>$store</h5>
+
+    <div x-data="{ name:'' }">
+        <span x-text="$store.name"></span>
+        <input x-model="name"/>
+        <button @click="$store.name=name; Alpine.store('name', name)">Enviar</button>
+        <script>
+            document.addEventListener('alpine:init',() => {
+                console.log("Init!")
+
+                Alpine.store('name', "Pepe")
+
+            })
+        </script>
+    </div>
+
+    <div x-data>
+        <span x-text="$store.name"></span>
+        <input x-model="$store.name"/>
+    </div>
+
+
+    <h5>$nextTick</h5>
+
+    <div x-data="{ title:'boton' }">
+        <button 
+        x-text="title"
+        @click="
+        title = 'Nuevo Label'
+
+        //$nextTick(() => console.log($el.innerText))
+        //console.log($el.innerText)
+        
+        await console.log($nextTick())
+        console.log($el.innerText)
+
+
+        "></button>
+    </div>
 
 
     <h4>Script aparte</h4>
 
-    <div
-        x-data="data()">
+    <div x-data="data()">
 
         <p>Total tareas <span x-text="totalTareas"></span></p>
 
@@ -155,16 +260,16 @@
     </div>
 
     <script>
-        function data(){
+        function data() {
             return {
-                todos:[ {completed:true, task:'Sacar la basura'}, {completed:false, task:'programar un rato'}, {completed:false, task:'durar en el trabajo'}],
-                completed(todo){
+                todos: [{ completed: true, task: 'Sacar la basura' }, { completed: false, task: 'programar un rato' }, { completed: false, task: 'durar en el trabajo' }],
+                completed(todo) {
                     return todo.completed
                 },
-                incompleted(todo){
+                incompleted(todo) {
                     return !todo.completed
                 },
-                totalTareas(){
+                totalTareas() {
                     return this.todos.length
                 }
             }
