@@ -6,6 +6,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Primeros pasos Alpine.js</title>
+
+    <!-- Alpine Plugins -->
+    <script defer src="https://unpkg.com/@alpinejs/mask@3.x.x/dist/cdn.min.js"></script>
+
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
@@ -203,10 +207,10 @@
 
     <div x-data="{ name:'' }">
         <span x-text="$store.name"></span>
-        <input x-model="name"/>
+        <input x-model="name" />
         <button @click="$store.name=name; Alpine.store('name', name)">Enviar</button>
         <script>
-            document.addEventListener('alpine:init',() => {
+            document.addEventListener('alpine:init', () => {
                 console.log("Init!")
 
                 Alpine.store('name', "Pepe")
@@ -217,16 +221,14 @@
 
     <div x-data>
         <span x-text="$store.name"></span>
-        <input x-model="$store.name"/>
+        <input x-model="$store.name" />
     </div>
 
 
     <h5>$nextTick</h5>
 
     <div x-data="{ title:'boton' }">
-        <button 
-        x-text="title"
-        @click="
+        <button x-text="title" @click="
         title = 'Nuevo Label'
 
         //$nextTick(() => console.log($el.innerText))
@@ -275,6 +277,68 @@
             }
         }
     </script>
+
+
+
+    <h4>Eventos</h4>
+
+    <div x-data>
+        <div @myAlert="alert('Hola Mundo')">
+            <button @click="$dispatch('myalert')">Click local</button>
+        </div>
+    </div>
+    <h5>Universal</h5>
+    <div x-data>
+        <div @myAlert2.window="alert('Hola Mundo Universal')">
+
+        </div>
+        <button @click="$dispatch('myalert2')">Click universal</button>
+    </div>
+    <div x-data>
+        <button @click="$dispatch('myalert2')">Click universal otro componente</button>
+    </div>
+
+    <h5>Pase parámetros</h5>
+    <div x-data>
+        <div @myAlert="alert($event.detail.message)">
+            <button @click="$dispatch('myalert',{ message:'Mensaje personalizado' })">Click parámetros</button>
+        </div>
+    </div>
+
+    <h4>$root</h4>
+
+    <div x-data data-name="Andres Cruz">
+        <button @click="alert($root.dataset.name)">$root</button>
+    </div>
+
+    <h4>Mascara</h4>
+
+    <div x-data="mask()">
+        <input type="text" x-mask="99/99/9999" placeholder="99/99/9999" />
+        <input type="text" x-mask="aa/bb/a*99" placeholder="aa/bb/a*99" />
+        <label for="">Numero telefono</label>
+
+        <label x-text="country"></label>
+        <input type="text" x-mask:dynamic="validatorInput" placeholder="telefono" />
+
+        <script>
+            function mask() {
+                return {
+                    country: "Por defecto",
+                    validatorInput(input) {
+                        this.country= "Otro Pais"
+                        if (input.startsWith("1")){
+                            this.country= "EEUU"
+                            return "1 9 999 999"
+                        }
+                        return "otro 9 999 99"
+                    }
+                }
+            }
+        </script>
+
+    </div>
+
 
 </body>
 
